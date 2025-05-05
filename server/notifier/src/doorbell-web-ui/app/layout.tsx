@@ -1,6 +1,18 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
+import Link from "next/link"
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +36,36 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <header className="w-full bg-white shadow flex items-center px-6 py-4">
+        <Link href="/" className="text-xl font-bold flex hover:underline mr-8">
+          Doorbell Notifier
+        </Link>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link href="/history" className="px-4 py-2">
+                  History
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link href="/settings" className="px-4 py-2">
+                  Settings
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </header>
+      <main>
         {children}
+      </main>
+      <footer>
+        
+      </footer>
       </body>
     </html>
   );
