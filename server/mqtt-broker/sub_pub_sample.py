@@ -1,10 +1,11 @@
 import time
 import threading
 import paho.mqtt.client as mqtt
+import json
 
 BROKER = "localhost"
 PORT = 1883
-TOPIC = "test/topic"
+TOPIC = "visitor"
 
 def on_connect(client, userdata, flags, rc, properties=None):
     if (rc != 0):
@@ -27,17 +28,21 @@ def run_subscriber():
 def run_publisher():
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.connect(BROKER, PORT, 60)
-    for i in range(5):
-        message = f"Hello MQTT {i}"
-        client.publish(TOPIC, message, qos=1)
-        print(f"Published: {message}")
-        time.sleep(1)
+    
+    payload = {
+        "message": "Visitor",
+        "filename": "Starry_Night.jpg"
+    }
+    message = json.dumps(payload)
+    client.publish(TOPIC, message, qos=1)
+    print(f"Published: {message}")
+    
     client.disconnect()
 
 if __name__ == "__main__":
-    sub_thread = threading.Thread(target=run_subscriber, daemon=True)
-    sub_thread.start()
-    time.sleep(2)
+    # sub_thread = threading.Thread(target=run_subscriber, daemon=True)
+    # sub_thread.start()
+    # time.sleep(2)
 
     pub_thread = threading.Thread(target=run_publisher)
     pub_thread.start()
