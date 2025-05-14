@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { useEffect } from "react";
 
 export default function SettingsPage() {
 
@@ -17,6 +18,33 @@ export default function SettingsPage() {
     faceRecognition: "",
   });
   const [status, setStatus] = useState("");
+
+    // Load settings on mount
+  useEffect(() => {
+    const fetchSettings = async () => {
+      setStatus("Loading...");
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          setForm({
+            botToken: data.botToken || "",
+            chatIds: data.chatIds || "",
+            mqttBrokerIp: data.mqttBrokerIp || "",
+            mqttBrokerPort: data.mqttBrokerPort || "",
+            mqttTopic: data.mqttTopic || "",
+            faceRecognition: data.faceRecognition || "",
+          });
+          setStatus("");
+        } else {
+          setStatus("Failed to load settings");
+        }
+      } catch {
+        setStatus("Failed to load settings");
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
