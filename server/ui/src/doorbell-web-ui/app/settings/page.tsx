@@ -61,10 +61,33 @@ export default function SettingsPage() {
     setStatus(res.ok ? "Saved!" : "Error saving settings");
   };
 
+  const handleMqttConnect = async () => {
+  setStatus("Connecting to MQTT...");
+  const res = await fetch("http://localhost:8000/mqtt/connect", { method: "POST" });
+  const data = await res.json();
+  setStatus(data.status || "Connect request sent");
+  };
+
+  const handleMqttDisconnect = async () => {
+    setStatus("Disconnecting from MQTT...");
+    const res = await fetch("http://localhost:8000/mqtt/disconnect", { method: "POST" });
+    const data = await res.json();
+    setStatus(data.status || "Disconnect request sent");
+  };
 
   return (
     <div className="p-8 max-w-xl mx-auto">
       <h2 className="text-2xl font-bold mb-6">Settings</h2>
+
+      <div className="flex gap-4 mb-6">
+        <Button type="button" onClick={handleMqttConnect}>
+          Connect MQTT
+        </Button>
+        <Button type="button" onClick={handleMqttDisconnect}>
+          Disconnect MQTT
+        </Button>
+      </div>
+      
       <form className="space-y-8" onSubmit={handleSubmit}>
         {/* Telegram Section */}
         <section>

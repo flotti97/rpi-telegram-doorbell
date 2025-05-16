@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
-import path from "path";
 
-const CONFIG_PATH = path.resolve(process.cwd(), "..\\settings.json");
+// Update the path to match the Docker mount
+const CONFIG_PATH = "/app/settings/settings.json";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();

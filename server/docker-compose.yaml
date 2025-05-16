@@ -32,3 +32,13 @@ services:
       - ./images:/app/images:ro
     environment:
       - LOG_LEVEL=debug
+
+  ui:
+    build: ./ui/src/doorbell-web-ui
+    container_name: doorbell-web-ui
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./config/settings.json:/app/settings/settings.json:rw
+      - ./images:/app/images:ro
