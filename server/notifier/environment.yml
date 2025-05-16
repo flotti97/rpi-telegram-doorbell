@@ -3,7 +3,9 @@ channels:
   - defaults
 dependencies:
   - python=3.11
-  - paho-mqtt
   - pip
   - pip:
       - requests
+      - fastapi
+      - "uvicorn[standard]"
+      - paho-mqtt

@@ -30,7 +30,7 @@ def run_publisher():
     client.connect(BROKER, PORT, 60)
     
     payload = {
-        "message": "Visitor",
+        "message": "Visitor at the door",
         "filename": "Starry_Night.jpg"
     }
     message = json.dumps(payload)

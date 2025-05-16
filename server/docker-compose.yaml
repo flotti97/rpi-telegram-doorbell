@@ -1,0 +1,34 @@
+services:
+  samba:
+    image: dockurr/samba
+    container_name: samba
+    environment:
+      NAME: "Data"
+      USER: "samba"
+      PASS: "secret"
+    ports:
+      - 446:445
+    volumes:
+      - ./images:/storage
+    restart: always
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./config:/mosquitto/config
+
+  notifier:
+    build: ./notifier
+    container_name: doorbell-notifier
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    volumes:
+      - ./config/settings.json:/app/config/settings.json:ro
+      - ./images:/app/images:ro
+    environment:
+      - LOG_LEVEL=debug

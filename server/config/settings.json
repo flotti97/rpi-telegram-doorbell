@@ -1,0 +1,8 @@
+{
+  "botToken": "",
+  "chatIds": "",
+  "mqttBrokerIp": "mosquitto",
+  "mqttBrokerPort": "1883",
+  "mqttTopic": "visitor",
+  "faceRecognition": ""
+}
