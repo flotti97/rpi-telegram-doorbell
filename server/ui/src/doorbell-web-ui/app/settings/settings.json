@@ -1,8 +1,9 @@
 {
-  "botToken": "",
-  "chatIds": "",
   "mqttBrokerIp": "127.0.0.1",
   "mqttBrokerPort": "1883",
   "mqttTopic": "visitor",
-  "faceRecognition": ""
+  "pushbulletToken": "o.sQgQk595YDtwO8larza1tgqB8tFBaHK2",
+  "pushbulletChannelTag": "eps_doorbell",
+  "doorbellName": "Main Doorbell",
+  "notificationFrequency": 10
 }

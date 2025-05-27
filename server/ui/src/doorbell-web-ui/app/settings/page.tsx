@@ -3,23 +3,22 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function SettingsPage() {
 
   const [form, setForm] = useState({
-    botToken: "",
-    chatIds: "",
     mqttBrokerIp: "",
     mqttBrokerPort: "",
     mqttTopic: "",
-    faceRecognition: "",
+    pushbulletToken: "",
+    pushbulletChannelTag: "",
+    doorbellName: "",
+    notificationFrequency: 10,
   });
   const [status, setStatus] = useState("");
 
-    // Load settings on mount
+  // Load settings on mount
   useEffect(() => {
     const fetchSettings = async () => {
       setStatus("Loading...");
@@ -28,12 +27,13 @@ export default function SettingsPage() {
         if (res.ok) {
           const data = await res.json();
           setForm({
-            botToken: data.botToken || "",
-            chatIds: data.chatIds || "",
             mqttBrokerIp: data.mqttBrokerIp || "",
             mqttBrokerPort: data.mqttBrokerPort || "",
             mqttTopic: data.mqttTopic || "",
-            faceRecognition: data.faceRecognition || "",
+            pushbulletToken: data.pushbulletToken || "",
+            pushbulletChannelTag: data.pushbulletChannelTag || "",
+            doorbellName: data.doorbellName || "",
+            notificationFrequency: data.notificationFrequency ?? 10,
           });
           setStatus("");
         } else {
@@ -46,8 +46,9 @@ export default function SettingsPage() {
     fetchSettings();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value, type } = e.target;
+    setForm({ ...form, [id]: type === "number" ? Number(value) : value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,10 +63,10 @@ export default function SettingsPage() {
   };
 
   const handleMqttConnect = async () => {
-  setStatus("Connecting to MQTT...");
-  const res = await fetch("http://localhost:8000/mqtt/connect", { method: "POST" });
-  const data = await res.json();
-  setStatus(data.status || "Connect request sent");
+    setStatus("Connecting to MQTT...");
+    const res = await fetch("http://localhost:8000/mqtt/connect", { method: "POST" });
+    const data = await res.json();
+    setStatus(data.status || "Connect request sent");
   };
 
   const handleMqttDisconnect = async () => {
@@ -89,33 +90,6 @@ export default function SettingsPage() {
       </div>
       
       <form className="space-y-8" onSubmit={handleSubmit}>
-        {/* Telegram Section */}
-        <section>
-          <h3 className="text-lg font-semibold mb-2">Telegram</h3>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="botToken">Telegram Token</Label>
-              <Input
-                id="botToken"
-                type="text"
-                className="mt-1"
-                placeholder="Enter your Telegram Bot Token"
-                value={form.botToken} onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="chatIds">Telegram Chat Ids</Label>
-              <Textarea
-                id="chatIds"
-                className="mt-1"
-                placeholder="Enter one or more Chat IDs, separated by commas"
-                rows={2}
-                value={form.chatIds} onChange={handleChange}
-              />
-            </div>
-          </div>
-        </section>
-
         {/* MQTT Section */}
         <section>
           <h3 className="text-lg font-semibold mb-2">MQTT</h3>
@@ -153,18 +127,58 @@ export default function SettingsPage() {
           </div>
         </section>
 
+        {/* Pushbullet Section */}
+        <section>
+          <h3 className="text-lg font-semibold mb-2">Pushbullet</h3>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="pushbulletToken">Pushbullet Token</Label>
+              <Input
+                id="pushbulletToken"
+                type="text"
+                className="mt-1"
+                placeholder="Enter your Pushbullet Access Token"
+                value={form.pushbulletToken} onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="pushbulletChannelTag">Pushbullet Channel Tag</Label>
+              <Input
+                id="pushbulletChannelTag"
+                type="text"
+                className="mt-1"
+                placeholder="Enter your Pushbullet Channel Tag"
+                value={form.pushbulletChannelTag} onChange={handleChange}
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Doorbell Section */}
         <section>
           <h3 className="text-lg font-semibold mb-2">Doorbell</h3>
-          <div>
-            <Label htmlFor="faceRecognition">Face Recognition configuration</Label>
-            <Textarea
-              id="faceRecognition"
-              className="mt-1"
-              placeholder="Paste your face recognition configuration here"
-              rows={3}
-              value={form.faceRecognition} onChange={handleChange}
-            />
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="doorbellName">Doorbell Name</Label>
+              <Input
+                id="doorbellName"
+                type="text"
+                className="mt-1"
+                placeholder="e.g. Main Doorbell"
+                value={form.doorbellName} onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label htmlFor="notificationFrequency">Notification Frequency (seconds)</Label>
+              <Input
+                id="notificationFrequency"
+                type="number"
+                className="mt-1"
+                placeholder="e.g. 10"
+                value={form.notificationFrequency} onChange={handleChange}
+                min={1}
+              />
+            </div>
           </div>
         </section>
 

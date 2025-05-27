@@ -5,6 +5,7 @@ import requests
 from fastapi import FastAPI
 from threading import Thread
 import logging
+import time
 
 logging.basicConfig(
     level=os.environ.get("LOG_LEVEL", "INFO").upper(),
@@ -19,6 +20,7 @@ class MQTTManager:
         self.client = None
         self.connected = False
         self.thread = None
+        self.last_notification = 0  # Timestamp of last notification
         self.load_settings()
 
     def load_settings(self):
@@ -29,6 +31,10 @@ class MQTTManager:
         self.MQTT_BROKER = self.settings.get("mqttBrokerIp", "localhost")
         self.MQTT_PORT = int(self.settings.get("mqttBrokerPort", 1883))
         self.MQTT_TOPIC = self.settings.get("mqttTopic", "visitor")
+        self.PUSHBULLET_TOKEN = self.settings.get("pushbulletToken", "")
+        self.PUSHBULLET_CHANNEL_TAG = self.settings.get("pushbulletChannelTag", "")
+        self.DOORBELL_NAME = self.settings.get("doorbellName", "Doorbell")
+        self.NOTIFICATION_FREQUENCY = int(self.settings.get("notificationFrequency", 10))
 
     def on_connect(self, client, userdata, flags, rc, properties=None):
         logger.info(f"Connected to MQTT broker with result code {rc}")
@@ -64,10 +70,7 @@ class MQTTManager:
 mqtt_manager = MQTTManager()
 mqtt_manager.connect()
 
-# --- Pushbullet functions
-
-PUSHBULLET_TOKEN = "o.sQgQk595YDtwO8larza1tgqB8tFBaHK2"
-PUSHBULLET_CHANNEL_TAG = "eps_doorbell"
+# --- Pushbullet functions ---
 
 def upload_file_to_pushbullet(token, file_path):
     file_name = os.path.basename(file_path)
@@ -108,18 +111,25 @@ def send_pushbullet_file_to_channel(token, channel_tag, file_path, title, body):
     push_file_to_channel(token, channel_tag, file_name, file_url, title, body)
 
 def handle_mqtt_payload(payload):
+    now = time.time()
+    # Only send notification if enough time has passed
+    if now - mqtt_manager.last_notification < mqtt_manager.NOTIFICATION_FREQUENCY:
+        logger.info("Notification suppressed due to frequency threshold.")
+        return
+
     message = payload.get("message", "Visitor")
     filename = payload.get("filename")
     if filename:
         image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app", "images", filename))
         if os.path.exists(image_path):
             send_pushbullet_file_to_channel(
-                PUSHBULLET_TOKEN,
-                PUSHBULLET_CHANNEL_TAG,
+                mqtt_manager.PUSHBULLET_TOKEN,
+                mqtt_manager.PUSHBULLET_CHANNEL_TAG,
                 image_path,
-                "Doorbell Event",
+                mqtt_manager.DOORBELL_NAME,
                 message
             )
+            mqtt_manager.last_notification = now  # Update last notification time
         else:
             logger.error(f"Image not found: {image_path}")
     else:
