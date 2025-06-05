@@ -3,3 +3,5 @@ __pycache__/
 *.jpg
 *.wav
 server/fileshare/
+docs/presentation_files
+docs/presentation.html

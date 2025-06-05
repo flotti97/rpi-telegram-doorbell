@@ -1,0 +1,76 @@
+---
+title: "Rasperry Pi Doorbell"
+author: 
+    - "Assel Massaurova"
+    - "Florian Schwarzmayr"
+    - "Ziyan Wang"
+format: pptx
+---
+
+## Overview
+
+![System Overview](assets/overview.svg)
+
+- raspberry takes an Image and publishes a message
+- notifier subscribes to the topic and forwards the event
+
+## Raspberry Pi
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- When the button is pressed an image is taken
+- A sound is played via the speaker
+- FaceRecognition is used to check if there is a face in the frame
+- The image is stored to the fileshare
+- A message is published via MQTT including the filename
+:::
+
+::: {.column width="40%"}
+![RPi Components](assets/rpi2.svg)
+:::
+
+::::
+
+
+## Notifier
+
+:::: {.columns}
+
+::: {.column width="60%"}
+- The Notifier subscribes to an MQTT Topic
+- A message is received
+- The image contained in the message is uploaded to pushbullet
+- A message is created with the image as an attachment
+- The message gets pushed to the pushbullet channel
+:::
+
+::: {.column width="40%"}
+![Notification Components](assets/notifier.svg)
+:::
+
+::::
+
+## Application Flow
+
+```{mermaid}
+sequenceDiagram
+    participant B as Button
+    participant R as Raspberry Pi
+    participant M as MQTT Broker
+    participant N as Notifier
+    participant P as Pushbullet
+
+    B->>R: Press Button
+    R->>R: Play Sound
+    R->>R: Take Photo
+    R->>R: Face Detection
+    R->>R: Save Image
+    R->>M: Publish Message
+    M->>N: Forward Message
+    N->>P: Upload Image
+    N->>P: Create Message
+    P->>User: Push Notification
+```
+
+
