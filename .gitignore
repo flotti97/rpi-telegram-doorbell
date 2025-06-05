@@ -5,3 +5,5 @@ __pycache__/
 server/fileshare/
 docs/presentation_files
 docs/presentation.html
+# Ignore environment config
+edge-device/src/.env

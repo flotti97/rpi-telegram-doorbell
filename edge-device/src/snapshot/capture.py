@@ -3,7 +3,7 @@ import os
 import subprocess
 
 # Absolute path to save snapshots
-IMAGE_SAVE_DIR = "/home/admin/envs/pi/rpi-telegram-doorbell/server/fileshare"
+IMAGE_SAVE_DIR = "/mnt/samba"
 
 def capture_snapshot(prefix="snap"):
     os.makedirs(IMAGE_SAVE_DIR, exist_ok=True)
