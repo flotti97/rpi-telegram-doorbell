@@ -3,5 +3,6 @@ __pycache__/
 *.jpg
 *.wav
 server/fileshare/
+
 # Ignore environment config
 edge-device/src/.env

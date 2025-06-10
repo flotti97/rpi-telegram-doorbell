@@ -3,7 +3,11 @@ services:
     image: dockurr/samba
     container_name: samba
     environment:
+<<<<<<< HEAD
       NAME: "Data"
+=======
+      NAME: "images"
+>>>>>>> master
       USER: "samba"
       PASS: "secret"
     ports:
@@ -41,4 +45,17 @@ services:
     restart: unless-stopped
     volumes:
       - ./config/settings.json:/app/settings/settings.json:rw
+<<<<<<< HEAD
       - ./images:/app/images:ro
+=======
+      - ./images:/app/public/images:ro
+
+  static:
+    image: nginx:alpine
+    container_name: image-server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./images:/usr/share/nginx/html:ro
+    restart: unless-stopped
+>>>>>>> master

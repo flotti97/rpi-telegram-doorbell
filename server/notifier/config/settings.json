@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "mqttBrokerIp": "127.0.0.1",
+=======
+  "mqttBrokerIp": "mosquitto",
+>>>>>>> master
   "mqttBrokerPort": "1883",
   "mqttTopic": "visitor",
   "pushbulletToken": "o.sQgQk595YDtwO8larza1tgqB8tFBaHK2",
