@@ -1,5 +1,5 @@
 {
-  "mqttBrokerIp": "127.0.0.1",
+  "mqttBrokerIp": "192.168.0.136",
   "mqttBrokerPort": "1883",
   "mqttTopic": "visitor",
   "pushbulletToken": "o.sQgQk595YDtwO8larza1tgqB8tFBaHK2",

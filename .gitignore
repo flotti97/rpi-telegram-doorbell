@@ -1,9 +1,29 @@
-__pycache__/
-*.pyc
-*.jpg
 *.wav
 server/fileshare/
 docs/presentation_files
 docs/presentation.html
 # Ignore environment config
 edge-device/src/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.env
+*.log
+*.sqlite
+server/notifier/**/site-packages/
+venv/
+
+# Node.js
+node_modules/
+**/node_modules/
+.next/
+dist/
+
+# Local files
+server/images/
+server/fileshare/
+
