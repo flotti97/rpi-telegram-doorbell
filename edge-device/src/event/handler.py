@@ -1,5 +1,6 @@
 import time
 import os
+import json
 from snapshot.capture import capture_snapshot
 from camera.face_detection import detect_face_from_image
 from sound.playback import player
@@ -36,12 +37,16 @@ def handle_button_event():
     print("[Detect] Face detected → sending MQTT...")
 
     # Step 4: Publish MQTT message
+    filename = os.path.basename(filepath)
+    print("[MQTT] Will publish:")
+    print(json.dumps({
+    "message": "Visitor detected",
+    "filename": filename
+}))
     publisher.publish(
         topic="visitor",
-        payload=str({
-            "event": "visitor_triggered",
-            "timestamp": int(now),
-            "image_path": filepath,
-            "face_detected": True
-        })
-    )
+        payload=json.dumps({
+            "message": "Visitor detected",
+            "filename": filename
+    })
+)
