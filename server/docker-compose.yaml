@@ -1,0 +1,53 @@
+services:
+  samba:
+    image: dockurr/samba
+    container_name: samba
+    environment:
+      NAME: "images"
+      USER: "samba"
+      PASS: "secret"
+    ports:
+      - 446:445
+    volumes:
+      - ./images:/storage
+    restart: always
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./config:/mosquitto/config
+
+  notifier:
+    build: ./notifier
+    container_name: doorbell-notifier
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    volumes:
+      - ./config/settings.json:/app/config/settings.json:ro
+      - ./images:/app/images:ro
+    environment:
+      - LOG_LEVEL=debug
+
+  ui:
+    build: ./ui/src/doorbell-web-ui
+    container_name: doorbell-web-ui
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./config/settings.json:/app/settings/settings.json:rw
+      - ./images:/app/public/images:ro
+
+  static:
+    image: nginx:alpine
+    container_name: image-server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./images:/usr/share/nginx/html:ro
+    restart: unless-stopped

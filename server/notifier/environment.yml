@@ -1,0 +1,11 @@
+name: doorbell-notifier
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - requests
+      - fastapi
+      - "uvicorn[standard]"
+      - paho-mqtt
