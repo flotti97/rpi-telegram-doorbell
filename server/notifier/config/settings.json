@@ -2,7 +2,7 @@
   "mqttBrokerIp": "mosquitto",
   "mqttBrokerPort": "1883",
   "mqttTopic": "visitor",
-  "pushbulletToken": "o.sQgQk595YDtwO8larza1tgqB8tFBaHK2",
+  "pushbulletToken": "<pushbullet_token>",
   "pushbulletChannelTag": "eps_doorbell",
   "doorbellName": "Main Doorbell",
   "notificationFrequency": 10
