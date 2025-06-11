@@ -43,10 +43,26 @@ class MQTTManager:
 
     def on_message(self, client, userdata, msg, properties=None):
         try:
+<<<<<<< HEAD
             payload = json.loads(msg.payload.decode())
             handle_mqtt_payload(payload)
         except Exception as e:
             logger.error(f"Error handling MQTT message: {e}")
+=======
+            raw = msg.payload.decode().strip()
+            if not raw:
+                logger.error("[MQTT] Received empty message.")
+                return
+
+            logger.debug(f"[MQTT] Raw payload: {raw}")
+
+            payload = json.loads(raw)
+            handle_mqtt_payload(payload)
+        except json.JSONDecodeError as e:
+            logger.error(f"[MQTT] Invalid JSON payload: {e}")
+        except Exception as e:
+            logger.error(f"[MQTT] Unexpected error: {e}")
+>>>>>>> master
 
     def connect(self):
         if self.connected:
@@ -112,6 +128,10 @@ def send_pushbullet_file_to_channel(token, channel_tag, file_path, title, body):
 
 def handle_mqtt_payload(payload):
     now = time.time()
+<<<<<<< HEAD
+=======
+    print("[DEBUG] Incoming payload:", payload) 
+>>>>>>> master
     # Only send notification if enough time has passed
     if now - mqtt_manager.last_notification < mqtt_manager.NOTIFICATION_FREQUENCY:
         logger.info("Notification suppressed due to frequency threshold.")
