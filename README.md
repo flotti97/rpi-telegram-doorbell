@@ -42,7 +42,7 @@ graph TD
     Visitor -->|Store Image| FileShare
     Notifier -->|Access Image| FileShare
 
-    Notifier -->|Send Message| Telegram
+    Notifier -->|Send Message| Pushbullet
 
     MQTT -->|Notify| UI
     UI -->|Subscribe| MQTT
@@ -62,7 +62,7 @@ graph TD
 | Image Upload to Shared FS             |                   |                   | ✅ done             |
 | MQTT Publisher                        |                   |                   | ✅ done             |
 | MQTT Broker Setup (Docker)            |                   |                   | ✅ done             |
-| Pushbullet Notification (Upload & Notify)    |                   | ✅                | ✅ done             |
+| Pushbullet Notification (Upload & Notify)    | ✅                  | ✅                | ✅ done             |
 | Web UI – Image & History Display      | ✅                |                   |                     |
 | Web UI – MQTT Subscription            |                   | ✅                |                     |
 | Web UI – Config Panel                 |                   |                   | ✅ done             |
