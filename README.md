@@ -29,10 +29,10 @@ graph TD
     end
 
     subgraph Phone
-        Telegram
+        Pushbullet
     end
 
-    Phone[Smartphone with Telegram]
+    Phone[Smartphone with Pushbullet]
 
 
     Pi -->|Send Message| MQTT
@@ -62,7 +62,7 @@ graph TD
 | Image Upload to Shared FS             |                   |                   | ✅ done             |
 | MQTT Publisher                        |                   |                   | ✅ done             |
 | MQTT Broker Setup (Docker)            |                   |                   | ✅ done             |
-| Telegram Bot (Sub, Format, Notify)    |                   | ✅                | ✅ done             |
+| Pushbullet Notification (Upload & Notify)    |                   | ✅                | ✅ done             |
 | Web UI – Image & History Display      | ✅                |                   |                     |
 | Web UI – MQTT Subscription            |                   | ✅                |                     |
 | Web UI – Config Panel                 |                   |                   | ✅ done             |
